@@ -71,7 +71,7 @@ public class Scope {
     	return symbolMap.get(key).type;
     }
     
-    public Object getValue(String key){
+    public Value getValue(String key){
     	return symbolMap.get(key).value;
     }
     

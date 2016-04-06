@@ -16,7 +16,7 @@ public class Driver {
 	public static void main(String[] args) throws Exception{
 		Stack<ParseTree> trees = new Stack<>();
 		SourceCodeReader scr = new SourceCodeReader();
-		ANTLRInputStream in = new ANTLRInputStream(scr.read("sample.txt"));
+		ANTLRInputStream in = new ANTLRInputStream(scr.read("sample2.txt"));
 		EecParshLexer lexer = new EecParshLexer(in);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		EecParshParser parser = new EecParshParser(tokens);
@@ -25,24 +25,27 @@ public class Driver {
 		parser.addErrorListener(eh);
 		lexer.addErrorListener(eh);
 		
-		//ParseTree t = parser.staato();
+		ParseTree t = parser.staato();
 		//ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), t);
 		
-		ParseTree tree = parser.staato(); 
+		/*ParseTree tree = parser.staato(); 
 		ParseTree mainNode = null;
 		int childCount = tree.getChildCount();
-		
-		for (int i = 0; i < childCount; i++) {
+		*/
+		/*for (int i = 0; i < childCount; i++) {
 			String funcName = tree.getChild(i).getChild(2).toStringTree();
-			/*if (funcName.equals("main")) {
+			if (funcName.equals("main")) {
 				mainNode = tree.getChild(i);
-			}*/
+			}
 			trees.push(tree.getChild(i));
 		}
 		//System.out.println(mainNode.toString());
-		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), tree.getChild(1));
+		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), tree.getChild(1));*/
 		
-		ASTViewer v = new ASTViewer(parser,tree);
+		EecParshVisitor visitor = new EecParshVisitor();
+		visitor.visit(t);
+		
+		ASTViewer v = new ASTViewer(parser,t);
 		v.setVisible(true);
 		
 	}

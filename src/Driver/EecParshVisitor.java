@@ -25,6 +25,30 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
         }
     }
 	
+	public boolean checkVarType(String value, String type){
+    	if(type.equals("gnstri")){
+    		if(value.startsWith("\"") && value.endsWith("\""))
+    				return true;
+    	}
+    	else if(type.equals("cahr")){
+    		if(value.startsWith("'") && value.endsWith("'"))
+    				return true;
+    	}
+    	else if(type.equals("folat")){
+    		if(value.contains("."))
+    				return true;
+    	}
+    	else if(type.equals("loobean")){
+    		if(value.equals("rute") || value.equals("lafse"))
+    				return true;
+    	}
+    	else if(type.equals("nit")){
+    		if(value.matches("-?[0-9]+"))
+    				return true;
+    	}
+    	return false;
+    }
+	
 	@Override 
 	public Value visitStaato(EecParshParser.StaatoContext ctx) { 
 		return visitChildren(ctx); 
@@ -32,18 +56,7 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	
 	@Override 
 	public Value visitPrintF(EecParshParser.PrintFContext ctx) { 
-		Scope scope = scopes.peek();
-		if(checkVarName(ctx.getChild(2).getText())){
-			System.out.println(scope.getValue(ctx.getChild(2).getText()));
-		}
-		else if (!ctx.getChild(2).getText().matches(".*\\d+.*")){
-			String dummy = ctx.getChild(2).getText();
-			String temp = dummy.substring(1, dummy.length()-1);
-			System.out.println(temp);
-		}
-		else{
-			System.out.println(ctx.getChild(2).getText());
-		}
+		
 		return visitChildren(ctx); 
 	}
 	
@@ -87,21 +100,41 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Value visitAssign(EecParshParser.AssignContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitDec(EecParshParser.DecContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitLit(EecParshParser.LitContext ctx) { return visitChildren(ctx); }
+	@Override public Value visitAssign(EecParshParser.AssignContext ctx) { 
+		System.out.println("Visiting a Assign");
+		
+		Scope scope = scopes.peek();
+		
+		
+		if(this.checkVarName(ctx.getChild(2).getText()))
+			scope.resolve(ctx.getChild(0).getText()).setValue(scope.getValue(ctx.getChild(2).getText()));
+		else if(!this.checkVarType(ctx.getChild(2).getText(), scope.getType(ctx.getChild(0).getText())))
+    		System.out.println("ER: Type mismatch");
+		else
+			scope.resolve(ctx.getChild(0).getText()).setValue(scope.getValue(ctx.getChild(2).getText()));
+		return visitChildren(ctx); 
+	}
+	
+	
+	@Override public Value visitDec(EecParshParser.DecContext ctx) { 
+		System.out.println("Visiting a Dec");
+		String varName = ctx.getText();
+        Scope scope = scopes.peek();
+                
+        //check for dupes
+       if (this.checkVarName(ctx.children.get(1).getChild(0).getText()))
+        	System.out.println("ER: Dupe found");
+       else
+        	scope.define(ctx.children.get(1).getChild(0).getText(), ctx.children.get(0).getText(), null);
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitLit(EecParshParser.LitContext ctx) { 
+		System.out.println(ctx.getToken(arg0, arg1));
+		System.out.println(ctx.getChild(0).getText());
+		return visitChildren(ctx); 
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -109,13 +142,12 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Value visitBool(EecParshParser.BoolContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitExpr(EecParshParser.ExprContext ctx) { return visitChildren(ctx); }
+	
+	@Override 
+	public Value visitExpr(EecParshParser.ExprContext ctx) { 
+			
+		return visitChildren(ctx); 
+	}
 	/**
 	 * {@inheritDoc}
 	 *
