@@ -1,25 +1,37 @@
 #Eec Parsh#
 
+unfc ovid swapNum)nit a, nit b(
+	}
+		nit a = 4!
+		nit b = 6!
+		nit c = 0!
+		
+		pintr)a(!
+		pintr)b(!
+		pintr)c(!
+		
+		c = a!
+		a = b!
+		b = c!
+		
+		pintr)a(!
+		pintr)b(!
+		pintr)c(!
+	{
+
 unfc ovid main)(
 	}
 		#hash for comments#
-		nit x = -1!  
-		folat y = 1.505! 
-		cahr z = 'c'!
-		gnstri a = "Hello World"!
-		loobean yes = rute!
-		nit sum = 1!
-		x = y * sum!
+		nit a = 0!
+		nit b = 0!
 		
-		fi)x>5(}
-			yes = lafse!
-		{
-		slee}
-			println)"Derp"(!				
-			liweh)x<sum && ton)yes((}
-				x = x + 1!
-			{
-		{
+		pintr)"enter for a"(!
+		snac)a(!
+		pintr)"enter for b"(!
+		snac)b(!
+		pintr)"A and B values are"(!
+		pintr)a(!
+		pintr)b(!
 		
-		
+		swapNum)a,b(!
 	{

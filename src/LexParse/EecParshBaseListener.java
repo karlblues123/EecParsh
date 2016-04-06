@@ -445,7 +445,14 @@ public class EecParshBaseListener implements EecParshListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFuncall(EecParshParser.FuncallContext ctx) { }
+	@Override public void enterFuncall(EecParshParser.FuncallContext ctx) {
+		//check if empty
+				for(int i=0; i<ctx.children.get(2).getChildCount(); i++ ){
+					if(!ctx.children.get(2).getChild(i).getText().equals(","))
+						System.out.println(ctx.children.get(2).getChild(i).getText());
+					
+				}
+	}
 	/**
 	 * {@inheritDoc}
 	 *

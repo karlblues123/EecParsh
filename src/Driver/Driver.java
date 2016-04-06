@@ -1,6 +1,8 @@
 package Driver;
 
 
+import java.util.Stack;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -12,8 +14,9 @@ import LexParse.EecParshParser;
 
 public class Driver {
 	public static void main(String[] args) throws Exception{
+		Stack<ParseTree> trees = new Stack<>();
 		SourceCodeReader scr = new SourceCodeReader();
-		ANTLRInputStream in = new ANTLRInputStream(scr.read("sample2.txt"));
+		ANTLRInputStream in = new ANTLRInputStream(scr.read("sample.txt"));
 		EecParshLexer lexer = new EecParshLexer(in);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		EecParshParser parser = new EecParshParser(tokens);
@@ -31,12 +34,13 @@ public class Driver {
 		
 		for (int i = 0; i < childCount; i++) {
 			String funcName = tree.getChild(i).getChild(2).toStringTree();
-			if (funcName.equals("main")) {
+			/*if (funcName.equals("main")) {
 				mainNode = tree.getChild(i);
-			}
+			}*/
+			trees.push(tree.getChild(i));
 		}
-		System.out.println(mainNode.toString());
-		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), mainNode);
+		//System.out.println(mainNode.toString());
+		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), tree.getChild(1));
 		
 		ASTViewer v = new ASTViewer(parser,tree);
 		v.setVisible(true);
