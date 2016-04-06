@@ -200,7 +200,15 @@ public class EecParshBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFuncall(EecParshParser.FuncallContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFuncall(EecParshParser.FuncallContext ctx) { 
+		//check if empty
+				/*for(int i=0; i<ctx.children.get(2).getChildCount(); i++ ){
+					if(!ctx.children.get(2).getChild(i).getText().equals(","))
+						System.out.println(ctx.children.get(2).getChild(i).getText());
+					
+				}*/
+		return visitChildren(ctx); 
+		}
 	/**
 	 * {@inheritDoc}
 	 *
