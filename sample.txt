@@ -1,0 +1,25 @@
+#Eec Parsh#
+
+unfc ovid main)(
+	}
+		#hash for comments#
+		nit x = -1!  
+		folat y = 1.505! 
+		cahr z = 'c'!
+		gnstri a = "Hello World"!
+		loobean yes = rute!
+		nit sum = 1!
+		x = y * sum!
+		
+		fi)x>5(}
+			yes = lafse!
+		{
+		slee}
+			println)"Derp"(!				
+			liweh)x<sum && ton)yes((}
+				x = x + 1!
+			{
+		{
+		
+		
+	{

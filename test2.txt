@@ -1,0 +1,11 @@
+unfc ovid main)( }
+	square)(!
+{
+
+unfc gnstri square)nit r(}
+	gnstri abc!
+	twisch)r(}
+		sace 2; abc = "Derp"! brake!
+		sace 3; abc = "Herp"! brake!
+	{
+{
