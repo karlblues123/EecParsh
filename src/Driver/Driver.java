@@ -22,9 +22,23 @@ public class Driver {
 		parser.addErrorListener(eh);
 		lexer.addErrorListener(eh);
 		
-		ParseTree t = parser.staato();
-		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), t);
-		ASTViewer v = new ASTViewer(parser,t);
+		//ParseTree t = parser.staato();
+		//ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), t);
+		
+		ParseTree tree = parser.staato(); 
+		ParseTree mainNode = null;
+		int childCount = tree.getChildCount();
+		
+		for (int i = 0; i < childCount; i++) {
+			String funcName = tree.getChild(i).getChild(2).toStringTree();
+			if (funcName.equals("main")) {
+				mainNode = tree.getChild(i);
+			}
+		}
+		System.out.println(mainNode.toString());
+		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), mainNode);
+		
+		ASTViewer v = new ASTViewer(parser,tree);
 		v.setVisible(true);
 		
 	}
