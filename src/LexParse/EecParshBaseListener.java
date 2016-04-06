@@ -1,5 +1,6 @@
 package LexParse;
 
+import java.util.Scanner;
 import java.util.Stack;
 
 import LexParse.EecParshBaseListener;
@@ -22,10 +23,12 @@ import Driver.Scope;
 public class EecParshBaseListener implements EecParshListener {
 	
 	private Stack<Scope> scopes;
+	private Scanner sc;
 
     public EecParshBaseListener() {
         scopes = new Stack<Scope>();
         scopes.push(new Scope(null));
+        sc = new Scanner(System.in);
     }
     
     //check if type
@@ -105,7 +108,12 @@ public class EecParshBaseListener implements EecParshListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterScanF(EecParshParser.ScanFContext ctx) { }
+	@Override public void enterScanF(EecParshParser.ScanFContext ctx) { 
+		Scope scope = scopes.peek();
+		//System.out.println(ctx.getChild(2).getText());
+		String temp = sc.nextLine();
+		scope.resolve(ctx.getChild(2).getText()).setValue(temp);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -119,6 +127,7 @@ public class EecParshBaseListener implements EecParshListener {
 	 */
 	@Override public void enterFunc(EecParshParser.FuncContext ctx) { 
 		scopes.push(new Scope(scopes.peek()));
+		System.out.println(ctx.getChild(4).getText());
 	}
 	/**
 	 * {@inheritDoc}
@@ -182,7 +191,18 @@ public class EecParshBaseListener implements EecParshListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterAssign(EecParshParser.AssignContext ctx) { 
-		
+		//System.out.println(ctx.getText());
+				Scope scope = scopes.peek();
+				
+				
+				if(this.checkVarName(ctx.getChild(2).getText()))
+					scope.resolve(ctx.getChild(0).getText()).setValue(scope.getValue(ctx.getChild(2).getText()));
+				else if(!this.checkVarType(ctx.getChild(2).getText(), scope.getType(ctx.getChild(0).getText())))
+		    		System.out.println("ER: Type mismatch");
+				else
+					scope.resolve(ctx.getChild(0).getText()).setValue(ctx.getChild(2).getText());
+		    	//if(ctx.children.get(1).getChild(2).getChildCount() > 1)
+		    		//System.out.println("Expression found");
 	}
 	/**
 	 * {@inheritDoc}
@@ -190,13 +210,13 @@ public class EecParshBaseListener implements EecParshListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAssign(EecParshParser.AssignContext ctx) { 
-		Scope scope = scopes.peek();
+		/*Scope scope = scopes.peek();
 		System.out.println(ctx.getChild(0).getText() + ":" + ctx.getChild(2).getText() + ":" + scope.getType(ctx.getChild(0).getText()));
 		if(!this.checkVarType(ctx.getChild(2).getText(), scope.getType(ctx.getChild(0).getText())))
 				System.out.println("ER: Type mismatch");
 		else {
 				scope.setValue(ctx.getChild(0).getText(),ctx.getChild(2).getText());
-		}
+		}*/
 
 	}
 	/**
@@ -206,16 +226,16 @@ public class EecParshBaseListener implements EecParshListener {
 	 */
 	@Override public void enterDec(EecParshParser.DecContext ctx) { 
 		//System.out.println("Declare:" );
-		String varName = ctx.getText();
-        Scope scope = scopes.peek();
-                
-        //check for dupes
-        if(this.checkVarName(ctx.children.get(1).getChild(0).getText()))
-        	System.out.println("ER: Dupe found");
-        else{
-        	scope.define(ctx.children.get(1).getChild(0).getText(), ctx.children.get(0).getText(), null);
-            //System.out.println(this.checkVarType(ctx.children.get(1).getChild(2).getText(), ctx.children.get(0).getText()));
-        }
+				String varName = ctx.getText();
+		        Scope scope = scopes.peek();
+		                
+		        //check for dupes
+		       if (this.checkVarName(ctx.children.get(1).getChild(0).getText()))
+		        	System.out.println("ER: Dupe found");
+		       else
+		        	scope.define(ctx.children.get(1).getChild(0).getText(), ctx.children.get(0).getText(), null);
+		            //System.out.println(this.checkVarType(ctx.children.get(1).getChild(2).getText(), ctx.children.get(0).getText()));
+		        
          
 	}
 	/**
