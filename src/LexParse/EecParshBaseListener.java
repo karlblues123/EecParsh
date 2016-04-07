@@ -22,6 +22,7 @@ import Driver.Scope;
  */
 public class EecParshBaseListener implements EecParshListener {
 	
+	private int count = 0;
 	private Stack<Scope> scopes;
 	private Scanner sc;
 
@@ -127,7 +128,8 @@ public class EecParshBaseListener implements EecParshListener {
 	 */
 	@Override public void enterFunc(EecParshParser.FuncContext ctx) { 
 		scopes.push(new Scope(scopes.peek()));
-		System.out.println(ctx.getChild(4).getText());
+		//System.out.println(ctx.getChild(4).getText());
+		System.out.println(ctx.getText());
 	}
 	/**
 	 * {@inheritDoc}
@@ -446,12 +448,14 @@ public class EecParshBaseListener implements EecParshListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterFuncall(EecParshParser.FuncallContext ctx) {
-		//check if empty
-				for(int i=0; i<ctx.children.get(2).getChildCount(); i++ ){
-					if(!ctx.children.get(2).getChild(i).getText().equals(","))
-						System.out.println(ctx.children.get(2).getChild(i).getText());
-					
-				}
+	//check if empty
+			for(int i=0; i<ctx.children.get(2).getChildCount(); i++ ){
+				if(!ctx.children.get(2).getChild(i).getText().equals(","))
+					System.out.println(ctx.children.get(2).getChild(i).getText());
+				
+			}
+			
+			
 	}
 	/**
 	 * {@inheritDoc}
