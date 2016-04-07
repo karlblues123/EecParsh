@@ -2,7 +2,9 @@
 
 unfc ovid main)(
 	}
-		nit x = 12345 + 1!
+		nit x = 12!
+		nit y = 4!
+		x = x + y * 2!
 		
 		
 		

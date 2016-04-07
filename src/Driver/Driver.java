@@ -42,11 +42,13 @@ public class Driver {
 		//System.out.println(mainNode.toString());
 		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), tree.getChild(1));*/
 		
+		ASTViewer v = new ASTViewer(parser,t);
+		v.setVisible(true);
+		
 		EecParshVisitor visitor = new EecParshVisitor();
 		visitor.visit(t);
 		
-		ASTViewer v = new ASTViewer(parser,t);
-		v.setVisible(true);
+		
 		
 	}
 }

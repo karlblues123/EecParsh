@@ -46,6 +46,10 @@ public class Value {
     	return value instanceof Character;
     }
     
+    public boolean isBoolean() {
+    	return value instanceof Boolean;
+    }
+    
     @Override
     public int hashCode() {
 

@@ -25,27 +25,17 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
         }
     }
 	
-	public boolean checkVarType(String value, String type){
-    	if(type.equals("gnstri")){
-    		if(value.startsWith("\"") && value.endsWith("\""))
-    				return true;
-    	}
-    	else if(type.equals("cahr")){
-    		if(value.startsWith("'") && value.endsWith("'"))
-    				return true;
-    	}
-    	else if(type.equals("folat")){
-    		if(value.contains("."))
-    				return true;
-    	}
-    	else if(type.equals("loobean")){
-    		if(value.equals("rute") || value.equals("lafse"))
-    				return true;
-    	}
-    	else if(type.equals("nit")){
-    		if(value.matches("-?[0-9]+"))
-    				return true;
-    	}
+	public boolean checkVarType(Value value, String type){
+    	if(type.equals("gnstri") && value.isString())
+    		return true;
+    	else if(type.equals("cahr") && value.isCharacter())
+    		return true;
+    	else if(type.equals("folat") && value.isFloat())
+    		return true;
+    	else if(type.equals("loobean") && value.isBoolean())
+    		return true;
+    	else if(type.equals("nit") && value.isInteger())
+    		return true;
     	return false;
     }
 	
@@ -73,51 +63,28 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public Value visitMorefparam(EecParshParser.MorefparamContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
+	
 	@Override public Value visitFparam(EecParshParser.FparamContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
+	
 	@Override public Value visitCodeblock(EecParshParser.CodeblockContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
+	
 	@Override public Value visitDatatype(EecParshParser.DatatypeContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
+	
 	@Override public Value visitAssign(EecParshParser.AssignContext ctx) { 
-		System.out.println("Visiting a Assign");
-		
 		Scope scope = scopes.peek();
-		
-		
+		Value value = this.visit(ctx.getChild(2));
+		System.out.println(value);
 		if(this.checkVarName(ctx.getChild(2).getText()))
-			scope.resolve(ctx.getChild(0).getText()).setValue(scope.getValue(ctx.getChild(2).getText()));
-		else if(!this.checkVarType(ctx.getChild(2).getText(), scope.getType(ctx.getChild(0).getText())))
+			scope.resolve(ctx.getChild(0).getText()).setValue(value);
+		else if(!this.checkVarType(value, scope.getType(ctx.getChild(0).getText())))
     		System.out.println("ER: Type mismatch");
 		else
-			scope.resolve(ctx.getChild(0).getText()).setValue(scope.getValue(ctx.getChild(2).getText()));
+			scope.resolve(ctx.getChild(0).getText()).setValue(value);
 		return visitChildren(ctx); 
 	}
 	
 	
 	@Override public Value visitDec(EecParshParser.DecContext ctx) { 
-		System.out.println("Visiting a Dec");
 		String varName = ctx.getText();
         Scope scope = scopes.peek();
                 
@@ -131,44 +98,101 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	
 	@Override 
 	public Value visitLit(EecParshParser.LitContext ctx) { 
-		System.out.println(ctx.getToken(arg0, arg1));
-		System.out.println(ctx.getChild(0).getText());
+		Scope currScope = scopes.peek();
+		if(ctx.getText().startsWith("\"") && ctx.getText().endsWith("\""))
+			return new Value(new String(ctx.getText().substring(1, ctx.getText().length()-1)));
+		if(ctx.getText().startsWith("'") && ctx.getText().endsWith("'"))
+			return new Value(new Character(ctx.getText().toCharArray()[1]));
+		if(ctx.getText().contains("."))
+			return new Value(new Float(ctx.getText()));
+		if(ctx.getText().equals("rute"))
+			return new Value(new Boolean("True"));
+		if(ctx.getText().equals("lafse"))
+			return new Value(new Boolean("False"));
+		if(ctx.getText().matches("-?[0-9]+"))
+			return new Value(new Integer(ctx.getText()));
+		if(currScope.inScope(ctx.getText())) {
+			return currScope.getValue(ctx.getText());
+		}
 		return visitChildren(ctx); 
 	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitBool(EecParshParser.BoolContext ctx) { return visitChildren(ctx); }
+	
+	@Override 
+	public Value visitBool(EecParshParser.BoolContext ctx) { 
+		return visitChildren(ctx); 
+	}
 	
 	@Override 
 	public Value visitExpr(EecParshParser.ExprContext ctx) { 
-			
+		if(ctx.getChildCount() > 1) {
+			Value left = this.visit(ctx.getChild(0));
+			Value right = this.visit(ctx.getChild(2));
+			if(ctx.getChild(1).getText().equals("+")) {
+				if(left.isFloat() || right.isFloat()) {
+					return new Value(left.asFloat() + right.asFloat());
+				}
+				else if(left.isInteger() && right.isInteger()) {
+					return new Value(left.asInteger() + right.asInteger());
+				}
+				else if(left.isString() || right.isString()) {
+					return new Value(left.asString() + right.asString());
+				}
+			}
+			else if(ctx.getChild(1).getText().equals("-")) {
+				if(left.isFloat() || right.isFloat()) {
+					return new Value(left.asFloat() - right.asFloat());
+				}
+				else if(left.isInteger() && right.isInteger()) {
+					return new Value(left.asInteger() - right.asInteger());
+				}
+			}
+		}
 		return visitChildren(ctx); 
 	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitNexpr(EecParshParser.NexprContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitLexpr(EecParshParser.LexprContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>Valuehe default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitOlexpr(EecParshParser.OlexprContext ctx) { return visitChildren(ctx); }
+	
+	@Override 
+	public Value visitNexpr(EecParshParser.NexprContext ctx) { 
+		if(ctx.getChildCount() > 1) {
+			Value left = this.visit(ctx.getChild(0));
+			Value right = this.visit(ctx.getChild(2));
+			if(ctx.getChild(1).getText().equals("*")) {
+				if(left.isFloat() || right.isFloat()) {
+					return new Value(left.asFloat() * right.asFloat());
+				}
+				else if(left.isInteger() && right.isInteger()) {
+					return new Value(left.asInteger() * right.asInteger());
+				}
+			}
+			else if(ctx.getChild(1).getText().equals("/")) {
+				if(left.isFloat() || right.isFloat()) {
+					return new Value(left.asFloat() / right.asFloat());
+				}
+				else if(left.isInteger() && right.isInteger()) {
+					return new Value(left.asInteger() / right.asInteger());
+				}
+			}
+			else if(ctx.getChild(1).getText().equals("%")) {
+				if(left.isFloat() || right.isFloat()) {
+					return new Value(left.asFloat() % right.asFloat());
+				}
+				else if(left.isInteger() && right.isInteger()) {
+					return new Value(left.asInteger() % right.asInteger());
+				}
+			}
+		}
+		
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitLexpr(EecParshParser.LexprContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitOlexpr(EecParshParser.OlexprContext ctx) { 
+		return visitChildren(ctx); 
+	}
 	/**
 	 * {@inheritDoc}
 	 *
