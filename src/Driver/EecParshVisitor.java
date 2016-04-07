@@ -76,7 +76,8 @@ public class EecParshVisitor extends EecParshBaseVisitor<Type> {
 	
 	@Override public Type visitDatatype(EecParshParser.DatatypeContext ctx) { return visitChildren(ctx); }
 	
-	@Override public Type visitAssign(EecParshParser.AssignContext ctx) { 
+	@Override 
+	public Type visitAssign(EecParshParser.AssignContext ctx) { 
 		Scope scope = scopes.peek();
 		Type value = this.visit(ctx.getChild(2));
 		if(this.checkVarName(ctx.getChild(2).getText()))
@@ -88,8 +89,8 @@ public class EecParshVisitor extends EecParshBaseVisitor<Type> {
 		return null; 
 	}
 	
-	
-	@Override public Type visitDec(EecParshParser.DecContext ctx) { 
+	@Override 
+	public Type visitDec(EecParshParser.DecContext ctx) { 
 		String varName;
 		if(ctx.assign() != null) {
 			varName = ctx.assign().IDEN().getText();
@@ -284,7 +285,8 @@ public class EecParshVisitor extends EecParshBaseVisitor<Type> {
 		return visitChildren(ctx); 
 	}
 	
-	@Override public Type visitLop(EecParshParser.LopContext ctx) { 
+	@Override 
+	public Type visitLop(EecParshParser.LopContext ctx) { 
 		return new Type(ctx.getText()); 
 	}
 	
@@ -460,20 +462,16 @@ public class EecParshVisitor extends EecParshBaseVisitor<Type> {
 		return null; 
 	}
 	
-	@Override public Type visitSwitchbreak(EecParshParser.SwitchbreakContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Type visitFuncall(EecParshParser.FuncallContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
+	@Override 
+	public Type visitSwitchbreak(EecParshParser.SwitchbreakContext ctx) { 
+		return visitChildren(ctx); 
+	}
+
+	@Override 
+	public Type visitFuncall(EecParshParser.FuncallContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
 	@Override public Type visitMoreparam(EecParshParser.MoreparamContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
