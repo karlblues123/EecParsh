@@ -63,7 +63,10 @@ public class EecParshVisitor extends EecParshBaseVisitor<Type> {
 		return visitChildren(ctx); 
 	}
 	
-	@Override public Type visitFunc(EecParshParser.FuncContext ctx) { return visitChildren(ctx); }
+	@Override public Type visitFunc(EecParshParser.FuncContext ctx) { 
+		
+		return visitChildren(ctx); 
+	}
 	
 	@Override 
 	public Type visitMorefparam(EecParshParser.MorefparamContext ctx) { 
@@ -472,12 +475,12 @@ public class EecParshVisitor extends EecParshBaseVisitor<Type> {
 		return visitChildren(ctx); 
 	}
 	
-	@Override public Type visitMoreparam(EecParshParser.MoreparamContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Type visitParam(EecParshParser.ParamContext ctx) { return visitChildren(ctx); }
+	@Override 
+	public Type visitMoreparam(EecParshParser.MoreparamContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override public Type visitParam(EecParshParser.ParamContext ctx) { 
+		return visitChildren(ctx); 
+	}
 }

@@ -7,11 +7,13 @@ public class Symbol {
 	 protected String name;
 	 protected String type;
 	 protected Type value;
+	 protected String[] parameters;
 
 	 public Symbol(String name, String type,Type value) {
 		 this.name = name;
 	     this.type = type;
 	     this.value = value;
+	     this.parameters = null;
 	 }
 
 	 public String getName() {

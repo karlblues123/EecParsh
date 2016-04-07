@@ -18,6 +18,7 @@ public class Scope {
 	
 	public ScopeType type;
 	public Scope enclosingScope;
+
 	protected Map<String,Symbol> symbolMap = new LinkedHashMap<String,Symbol>();
 	
 	public Scope(Scope enclosingScope) {
