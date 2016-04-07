@@ -3,6 +3,7 @@ package Driver;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import LexParse.EecParshBaseVisitor;
 import LexParse.EecParshParser;
@@ -64,8 +65,25 @@ public class EecParshVisitor extends EecParshBaseVisitor<Type> {
 	}
 	
 	@Override public Type visitFunc(EecParshParser.FuncContext ctx) { 
-		
-		return visitChildren(ctx); 
+		String type = ctx.datatype().getText();
+		String name = ctx.FUNCTION().getText()+"_"+ ctx.IDEN().getText();
+		ParseTree parameters = null;
+		if(!(ctx.morefparam().equals(""))) {
+			parameters = ctx.morefparam();
+		}
+		ParseTree method = ctx.codeblock();
+		Scope currScope = scopes.peek();
+		if(ctx.RETURN() != null) {
+			System.out.println("There is a return type");
+		}
+		currScope.define(name, type, null, parameters, method);
+		if(this.checkVarName("unfc_main")) {
+			return this.visit(currScope.getMethod("unfc_main"));
+		}
+		else {
+			System.out.println("No main function defined.");
+		}
+		return null; 
 	}
 	
 	@Override 
@@ -73,11 +91,14 @@ public class EecParshVisitor extends EecParshBaseVisitor<Type> {
 		return visitChildren(ctx); 
 	}
 	
-	@Override public Type visitFparam(EecParshParser.FparamContext ctx) { return visitChildren(ctx); }
+	@Override 
+	public Type visitFparam(EecParshParser.FparamContext ctx) { return visitChildren(ctx); }
 	
-	@Override public Type visitCodeblock(EecParshParser.CodeblockContext ctx) { return visitChildren(ctx); }
+	@Override 
+	public Type visitCodeblock(EecParshParser.CodeblockContext ctx) { return visitChildren(ctx); }
 	
-	@Override public Type visitDatatype(EecParshParser.DatatypeContext ctx) { return visitChildren(ctx); }
+	@Override 
+	public Type visitDatatype(EecParshParser.DatatypeContext ctx) { return visitChildren(ctx); }
 	
 	@Override 
 	public Type visitAssign(EecParshParser.AssignContext ctx) { 

@@ -2,6 +2,8 @@ package Driver;
 
 import java.util.Map;
 
+import org.antlr.v4.runtime.tree.ParseTree;
+
 import LexParse.Type;
 
 import java.util.ArrayList;
@@ -36,7 +38,12 @@ public class Scope {
      * Define a new variable in the current scope 
      * This is the entry point for adding new variables
      */
-    public void define(String name,String type,Type value) {
+	public void define(String name,String type,Type value,ParseTree parameters,ParseTree method) {
+        Symbol symbol = new EecParshFunction(name,type,value,parameters,method);
+        define(symbol);
+    }
+	
+	public void define(String name,String type,Type value) {
         Symbol symbol = new Symbol(name,type,value);
         define(symbol);
     }
@@ -74,6 +81,14 @@ public class Scope {
     
     public Type getValue(String key){
     	return symbolMap.get(key).value;
+    }
+    
+    public ParseTree getParamters(String key) {
+    	return ((EecParshFunction)symbolMap.get(key)).getParameters();
+    }
+    
+    public ParseTree getMethod(String key) {
+    	return ((EecParshFunction)symbolMap.get(key)).getMethod();
     }
     
     public void setValue(String key,Type value) {
