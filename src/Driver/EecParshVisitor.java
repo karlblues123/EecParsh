@@ -131,7 +131,7 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	
 	@Override 
 	public Value visitLit(EecParshParser.LitContext ctx) { 
-		System.out.println(ctx.getToken(arg0, arg1));
+		//System.out.println(ctx.getToken(arg0, arg1));
 		System.out.println(ctx.getChild(0).getText());
 		return visitChildren(ctx); 
 	}

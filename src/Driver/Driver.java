@@ -28,11 +28,10 @@ public class Driver {
 		parser.addErrorListener(eh);
 		lexer.addErrorListener(eh);
 		
-<<<<<<< HEAD
 		LinePointer lp = new LinePointer(scr.codeByLine);
 		
-		//ParseTree t = parser.staato();
-		//ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), t);
+		ParseTree t = parser.staato();
+		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), t);
 		
 		ParseTree tree = parser.staato(); 
 		System.out.println(scr.getCodeByLine().get(3).toString());
@@ -40,7 +39,6 @@ public class Driver {
 		int childCount = tree.getChildCount();
 		/*
 		for (int i = 0; i < childCount; i++) {
-=======
 		ParseTree t = parser.staato();
 		//ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), t);
 		
@@ -49,23 +47,19 @@ public class Driver {
 		int childCount = tree.getChildCount();
 		*/
 		/*for (int i = 0; i < childCount; i++) {
->>>>>>> origin/master
 			String funcName = tree.getChild(i).getChild(2).toStringTree();
 			if (funcName.equals("main")) {
 				mainNode = tree.getChild(i);
 			}
 			trees.push(tree.getChild(i));
-		}*/
+		}
 		//System.out.println(mainNode.toString());
-<<<<<<< HEAD
 		System.out.println(lp.currLine);
 		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), tree);
-=======
 		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), tree.getChild(1));*/
 		
 		EecParshVisitor visitor = new EecParshVisitor();
 		visitor.visit(t);
->>>>>>> origin/master
 		
 		ASTViewer v = new ASTViewer(parser,t);
 		v.setVisible(true);
