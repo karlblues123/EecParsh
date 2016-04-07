@@ -31,12 +31,7 @@ public class Driver {
 		LinePointer lp = new LinePointer(scr.codeByLine);
 		
 		ParseTree t = parser.staato();
-		ParseTreeWalker.DEFAULT.walk(new EecParshBaseListener(), t);
 		
-		ParseTree tree = parser.staato(); 
-		System.out.println(scr.getCodeByLine().get(3).toString());
-		ParseTree mainNode = null;
-		int childCount = tree.getChildCount();
 		/*
 		for (int i = 0; i < childCount; i++) {
 		ParseTree t = parser.staato();

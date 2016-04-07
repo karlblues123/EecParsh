@@ -2,7 +2,7 @@ package Driver;
 
 import java.util.Map;
 
-import LexParse.Value;
+import LexParse.Type;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -35,7 +35,7 @@ public class Scope {
      * Define a new variable in the current scope 
      * This is the entry point for adding new variables
      */
-    public void define(String name,String type,Value value) {
+    public void define(String name,String type,Type value) {
         Symbol symbol = new Symbol(name,type,value);
         define(symbol);
     }
@@ -71,11 +71,11 @@ public class Scope {
     	return symbolMap.get(key).type;
     }
     
-    public Value getValue(String key){
+    public Type getValue(String key){
     	return symbolMap.get(key).value;
     }
     
-    public void setValue(String key,Value value) {
+    public void setValue(String key,Type value) {
     	symbolMap.get(key).setValue(value);
     }
     

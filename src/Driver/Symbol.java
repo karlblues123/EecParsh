@@ -1,14 +1,14 @@
 package Driver;
 
-import LexParse.Value;
+import LexParse.Type;
 
 public class Symbol {
 	 protected Scope scope; // the owning scope
 	 protected String name;
 	 protected String type;
-	 protected Value value;
+	 protected Type value;
 
-	 public Symbol(String name, String type,Value value) {
+	 public Symbol(String name, String type,Type value) {
 		 this.name = name;
 	     this.type = type;
 	     this.value = value;
@@ -34,7 +34,7 @@ public class Symbol {
 		 return value;
 	 }
 	 
-	 public void setValue(Value value) {
+	 public void setValue(Type value) {
 		 this.value = value;
 	 }
 

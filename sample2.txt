@@ -2,9 +2,12 @@
 
 unfc ovid main)(
 	}
-		loobean x = rute!
-		
-		
+		nit x = 1!
+		twisch)x( }
+			sace 1; pintr)'a'(!
+			sace 3; pintr)'b'(!
+			sace 'c'; pintr)'c'(!brake!
+		{
 		
 		
 		

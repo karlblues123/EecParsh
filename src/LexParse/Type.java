@@ -1,12 +1,12 @@
 package LexParse;
 
-public class Value {
+public class Type {
 
-    public static Value VOID = new Value(new Object());
+    public static Type VOID = new Type(new Object());
 
     final Object value;
 
-    public Value(Object value) {
+    public Type(Object value) {
         this.value = value;
     }
     
@@ -77,7 +77,7 @@ public class Value {
             return false;
         }
 
-        Value that = (Value)o;
+        Type that = (Type)o;
 
         return this.value.equals(that.value);
     }
