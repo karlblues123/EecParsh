@@ -56,13 +56,11 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	}
 	
 	@Override public Value visitFunc(EecParshParser.FuncContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitMorefparam(EecParshParser.MorefparamContext ctx) { return visitChildren(ctx); }
+	
+	@Override 
+	public Value visitMorefparam(EecParshParser.MorefparamContext ctx) { 
+		return visitChildren(ctx); 
+	}
 	
 	@Override public Value visitFparam(EecParshParser.FparamContext ctx) { return visitChildren(ctx); }
 	
@@ -105,10 +103,6 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 			return new Value(new Character(ctx.getText().toCharArray()[1]));
 		if(ctx.getText().contains("."))
 			return new Value(new Float(ctx.getText()));
-		if(ctx.getText().equals("rute"))
-			return new Value(new Boolean("True"));
-		if(ctx.getText().equals("lafse"))
-			return new Value(new Boolean("False"));
 		if(ctx.getText().matches("-?[0-9]+"))
 			return new Value(new Integer(ctx.getText()));
 		if(currScope.inScope(ctx.getText())) {
@@ -119,6 +113,10 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	
 	@Override 
 	public Value visitBool(EecParshParser.BoolContext ctx) { 
+		if(ctx.getText().equals("rute"))
+			return new Value(new Boolean("True"));
+		if(ctx.getText().equals("lafse"))
+			return new Value(new Boolean("False"));
 		return visitChildren(ctx); 
 	}
 	
@@ -127,6 +125,7 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 		if(ctx.getChildCount() > 1) {
 			Value left = this.visit(ctx.getChild(0));
 			Value right = this.visit(ctx.getChild(2));
+			 
 			if(ctx.getChild(1).getText().equals("+")) {
 				if(left.isFloat() || right.isFloat()) {
 					return new Value(left.asFloat() + right.asFloat());
@@ -153,39 +152,44 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	@Override 
 	public Value visitNexpr(EecParshParser.NexprContext ctx) { 
 		if(ctx.getChildCount() > 1) {
-			Value left = this.visit(ctx.getChild(0));
-			Value right = this.visit(ctx.getChild(2));
-			if(ctx.getChild(1).getText().equals("*")) {
-				if(left.isFloat() || right.isFloat()) {
-					return new Value(left.asFloat() * right.asFloat());
+			if(!ctx.getChild(0).getText().equals(")") && !ctx.getChild(2).getText().equals("(")) {
+				Value left = this.visit(ctx.getChild(0));
+				Value right = this.visit(ctx.getChild(2));
+				if(ctx.getChild(1).getText().equals("*")) {
+					if(left.isFloat() || right.isFloat()) {
+						return new Value(left.asFloat() * right.asFloat());
+					}
+					else if(left.isInteger() && right.isInteger()) {
+						return new Value(left.asInteger() * right.asInteger());
+					}
 				}
-				else if(left.isInteger() && right.isInteger()) {
-					return new Value(left.asInteger() * right.asInteger());
+				else if(ctx.getChild(1).getText().equals("/")) {
+					if(left.isFloat() || right.isFloat()) {
+						return new Value(left.asFloat() / right.asFloat());
+					}
+					else if(left.isInteger() && right.isInteger()) {
+						return new Value(left.asInteger() / right.asInteger());
+					}
+				}
+				else if(ctx.getChild(1).getText().equals("%")) {
+					if(left.isFloat() || right.isFloat()) {
+						return new Value(left.asFloat() % right.asFloat());
+					}
+					else if(left.isInteger() && right.isInteger()) {
+						return new Value(left.asInteger() % right.asInteger());
+					}
 				}
 			}
-			else if(ctx.getChild(1).getText().equals("/")) {
-				if(left.isFloat() || right.isFloat()) {
-					return new Value(left.asFloat() / right.asFloat());
-				}
-				else if(left.isInteger() && right.isInteger()) {
-					return new Value(left.asInteger() / right.asInteger());
-				}
-			}
-			else if(ctx.getChild(1).getText().equals("%")) {
-				if(left.isFloat() || right.isFloat()) {
-					return new Value(left.asFloat() % right.asFloat());
-				}
-				else if(left.isInteger() && right.isInteger()) {
-					return new Value(left.asInteger() % right.asInteger());
-				}
-			}
+			else {
+				return this.visit(ctx.getChild(1));
+			}	
 		}
-		
 		return visitChildren(ctx); 
 	}
 	
 	@Override 
 	public Value visitLexpr(EecParshParser.LexprContext ctx) { 
+		
 		return visitChildren(ctx); 
 	}
 	
@@ -193,68 +197,46 @@ public class EecParshVisitor extends EecParshBaseVisitor<Value> {
 	public Value visitOlexpr(EecParshParser.OlexprContext ctx) { 
 		return visitChildren(ctx); 
 	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>Valuehe default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitNlexpr(EecParshParser.NlexprContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>Valuehe default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitMlexpr(EecParshParser.MlexprContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>Valuehe default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitLop(EecParshParser.LopContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>Valuehe default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitCondif(EecParshParser.CondifContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>Valuehe default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitCondelse(EecParshParser.CondelseContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitForloop(EecParshParser.ForloopContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitWhileloop(EecParshParser.WhileloopContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public Value visitCondswitch(EecParshParser.CondswitchContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
+	
+	@Override 
+	public Value visitNlexpr(EecParshParser.NlexprContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitMlexpr(EecParshParser.MlexprContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override public Value visitLop(EecParshParser.LopContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitCondif(EecParshParser.CondifContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitCondelse(EecParshParser.CondelseContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitForloop(EecParshParser.ForloopContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitWhileloop(EecParshParser.WhileloopContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
+	@Override 
+	public Value visitCondswitch(EecParshParser.CondswitchContext ctx) { 
+		return visitChildren(ctx); 
+	}
+	
 	@Override public Value visitCondcase(EecParshParser.CondcaseContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

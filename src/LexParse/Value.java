@@ -11,19 +11,25 @@ public class Value {
     }
     
     public Integer asInteger() {
-    	return (Integer)value;
+    	if(this.isInteger())
+    		return (Integer)value;
+    	return Integer.parseInt(this.toString());
     }
 
     public Boolean asBoolean() {
-        return (Boolean)value;
+        if(this.isBoolean())
+        	return (Boolean)value;
+        return Boolean.parseBoolean(this.toString());
     }
 
     public Float asFloat() {
-        return (Float)value;
+        if(this.isFloat())
+        	return (Float)value;
+        return Float.parseFloat(this.toString());
     }
 
     public String asString() {
-        return String.valueOf(value);
+    	return String.valueOf(value);
     }
     
     public Character asCharacter() {

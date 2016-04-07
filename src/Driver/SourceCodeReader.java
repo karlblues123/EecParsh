@@ -4,10 +4,20 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class SourceCodeReader {
 	BufferedReader br;
 	String sourceCode;
+	ArrayList<String> codeByLine;
+	
+	public ArrayList<String> getCodeByLine(){
+		return this.codeByLine;
+	}
+	
+	public SourceCodeReader(){
+		this.codeByLine = new ArrayList();
+	}
 	
 	public String read(String filename){
 		sourceCode = "";
@@ -17,6 +27,7 @@ public class SourceCodeReader {
 		    String line = br.readLine();
 
 			    while (line != null) {
+			    	codeByLine.add(line);
 			        sb.append(line);
 			        sb.append(System.lineSeparator());
 			        line = br.readLine();
@@ -28,6 +39,8 @@ public class SourceCodeReader {
 		} catch (IOException e){
 			e.printStackTrace();
 		}
+		
+		
 		return sourceCode;
 	}
 }

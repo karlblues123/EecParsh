@@ -2,9 +2,7 @@
 
 unfc ovid main)(
 	}
-		nit x = 12!
-		nit y = 4!
-		x = x + y * 2!
+		loobean x = rute!
 		
 		
 		
